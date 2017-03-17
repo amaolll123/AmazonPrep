@@ -4,6 +4,8 @@ public class Solution {
 		int zsy = 0;
 		int yxx = matrix.length-1;
 		int yxy = yxx;
+
+		//只确定矩阵
 		while(zsx<yxx){
 			rotateEdge(matrix,zsx++,zsy++,yxx--,yxy--);
 		}
