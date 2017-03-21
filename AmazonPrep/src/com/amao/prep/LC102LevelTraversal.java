@@ -27,7 +27,7 @@ public class LC102LevelTraversal {
 			List<Integer> l = new ArrayList<Integer>();
 			for(int i = 0 ;i<size;i++){
 			
-				TreeNode tn = bsfQueue.poll();
+				TreeNode tn = bsfQueue.poll(); 
 				
 				l.add(tn.val);
 				
