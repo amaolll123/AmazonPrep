@@ -3,11 +3,13 @@ package com.amao.todo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import com.amao.todo.pojo.Todo;
@@ -31,23 +33,17 @@ public class TodoPersistenceService {
 	public List<Todo> retrieveTodos(String user) {
 		getSessionFactory();
 		Session session = factory.openSession();
+		Criteria cr = session.createCriteria(Todo.class);
 		Transaction tx = null;
 		List<Todo> filteredTodos = new ArrayList<Todo>();
 		
 		try {
 			tx = session.beginTransaction();
-			List todos = session.createQuery("from Todo").list();
-			
-			for(Object t : todos){
-				Todo todo = (Todo) t;
-				if(todo.getUser().equals(user)){
-					filteredTodos.add(todo);
-				}
-				
-			}
+			cr.add(Restrictions.eq("user", user));
+			List<Todo> todos = cr.list();
 			
 			tx.commit();
-			return filteredTodos;
+			return todos;
 		} catch (Exception e) {
 			if(tx!=null) tx.rollback();
 			e.printStackTrace();
@@ -67,12 +63,7 @@ public class TodoPersistenceService {
 		Integer todoId = null;
 		try {
 			tx = session.beginTransaction();
-			
-			
 			todoId = (Integer) session.save(t);
-			
-			
-			
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
